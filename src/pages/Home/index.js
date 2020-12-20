@@ -18,6 +18,7 @@ import api from '../../services/api';
 const Home = () => {
 
   const [info, setInfo] = useState({});
+  const [countdown, setCountdown] = useState();
 
   useEffect(() => {
     api
@@ -31,6 +32,19 @@ const Home = () => {
 
  }, []);
 
+  useEffect(() => {
+    api.get(`/event/public-info?key=novalp`)
+    .then((res) => {
+        const cont = new Date(`${res.data.eventdate}T${res.data.eventhour}`).getTime()
+        setCountdown(cont);
+        console.log(cont);
+        //setCountdown(Date.now()+10000);
+        // console.log(countdown);
+        // setCountdown(1608231101568);
+    }).catch((err) => {
+        // console.log(err);
+    })
+  }, []);
 
   return (
 
@@ -45,7 +59,7 @@ const Home = () => {
 
                 <BannerMobile/>
 
-                <SectionCountdown/>
+                <SectionCountdown count={countdown}/>
 
                 <SectionAbout/>
                 

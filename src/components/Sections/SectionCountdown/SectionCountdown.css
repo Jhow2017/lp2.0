@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap');
 
 .countdown-section {	
 	display: block;
@@ -41,15 +42,21 @@
 .countdown-show7 .countdown-section {
 	width: 14%;
 }
-
+span.countdown-row.countdown-show4.countdownNew,
+span.countdown-row.countdown-show4.countdown24,
+span.countdown-row.countdown-show4.countdown00 {
+    display: flex;
+	justify-content: center;
+	font-size: 21px;
+    padding-bottom: 19px;
+}
 .countdown-amount {
-	font-family: 'Montserrat',Arial, Helvetica, sans-serif;
-    font-size: 72px;
+	font-family: 'Roboto Mono', monospace, 'Montserrat',Arial, Helvetica, sans-serif;
+  font-size: 72px;
 	color:#fff;
 }
 .countdown-period {
-    display: block;
-	width:70px;
+  display: block;
 	margin:0 auto;
 	margin-top:5px;
 }
@@ -89,6 +96,10 @@
 
 span a {
     text-decoration: revert;
+}
+#countdownNew {
+	text-align: center;
+	font-size: 22px;
 }
 
 @media only screen and (max-width: 767px){

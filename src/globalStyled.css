@@ -1492,21 +1492,43 @@ border:solid 1px #ddd;
 /* ================================================== */
 /* contact form */
 /* ================================================== */
-	.error {
-		padding:20px;
-		border:none;
-		display: none;
-		color: #d9534f;
-		border:solid 1px #d9534f;
-		font-size: 12px;
-	}
-		.success {
-		padding:20px;
-		display: none;
-		color: #5cb85c;
-		border:solid 1px #5cb85c;
-		margin-bottom: 20px;
-	}
+
+.alert.alert-danger.alert-dismissible.fade.show {
+    width: 100%;
+    text-align: center;
+	font-size: 20px;
+	color: #fff;
+    background-color: #dc3545;
+	border-color: #dc3545;
+	margin: 20px;
+}
+.alert.alert-success.alert-dismissible.fade.show {
+	width: 100%;
+    text-align: center;
+	font-size: 20px;
+	color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+	margin: 20px;
+}
+.error {
+	width: 100%;
+	margin-top: .25rem;
+	font-size: 23px;
+	color: #dc3545!important;
+	text-align: center;
+	margin: 15px;
+}
+.success {
+	width: 100%;
+	margin-top: .25rem;
+	font-size: 23px;
+	text-align: center;
+	margin: 15px;
+color: #5cb85c!important;
+}
+		
+		
 	.error img {
 		vertical-align: top;
 	}

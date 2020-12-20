@@ -1,25 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, { useState, history, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage, withFormik } from "formik";
 import * as Yup from "yup";
 
+import api from '../../../services/api';
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 const crmExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 
-const handleSubmit = async (values, actions) => {
-    const data = await new Promise((resolve) => {
-      window.setTimeout(() => resolve(values), 2000);
-    });
-    console.log(data);
-    actions.setSubmitting(false);
-    actions.resetForm();
-};
-
-
 const optionsUF = [
-    { id: 'placeholder', title: 'Selecione o seu Estado *' },
+        
     { id: 'AC', title: 'Acre' },
     { id: 'AL', title: 'Alagoas' },
     { id: 'AP', title: 'Amapa' },
@@ -50,7 +40,7 @@ const optionsUF = [
   ];
 
 const optionsUF_CRM = [
-{ id: 'placeholder', title: 'UF CRM *' },
+
 { id: 'AC', title: 'Acre' },
 { id: 'AL', title: 'Alagoas' },
 { id: 'AP', title: 'Amapa' },
@@ -80,7 +70,7 @@ const optionsUF_CRM = [
 { id: 'TO', title: 'Tocantins' },
 ]; 
 
-const LoginSchema = Yup.object().shape({
+const RegisterSchema = Yup.object().shape({
         
     name: Yup.string()
         .min(5, "O nome deve ter no mínimo 3 caracteres")
@@ -96,44 +86,86 @@ const LoginSchema = Yup.object().shape({
     //     .email("Formato de endereço de e-mail inválido")
     //     .required("E-mail é obrigatório"),
 
-    // password: Yup.string()
-    //      .required("Senha é obrigatório")
-    //      .matches( /^(?=.*[A-Za-z])(?=.*\d)[\w\W]{8,100}$/,"Digite uma senha forte. Ex: Nbb_885522"),
-    //      .min(8)
-    //      .matches(RegExp("(.*[a-z].*)"), "Lowercase")
-    //      .matches(RegExp("(.*[A-Z].*)"), "Uppercase")
-    //      .matches(RegExp("(.*\\d.*)"), "Number")
-    //      .matches(RegExp('[!@#$%^&*(),.?":{}|<>]'), "Special")
+    password: Yup.string()
+         .required("Senha é obrigatório")
+         .matches( /^(?=.*[A-Za-z])(?=.*\d)[\w\W]{8,100}$/,"Digite uma senha forte. Ex: Nbb_885522")
+         .min(8)
+         .matches(RegExp("(.*[a-z].*)"), "Lowercase")
+         .matches(RegExp("(.*[A-Z].*)"), "Uppercase")
+         .matches(RegExp("(.*\\d.*)"), "Number"),
 
-
-
-    contact: Yup.string()
+    fields: Yup.object().shape({
+        contact: Yup.string()
         .matches(phoneRegExp, "Número de telefone não é válido")
         .required("Número de contato obrigatório"),
-
-    crm: Yup.string()
+        crm: Yup.string()
         .matches(crmExp, "Número do CRM inválido")
         .required("CRM obrigatório"),
 
-    state: Yup.string()
-        .oneOf(optionsUF, "Seleção inválida")
-        .required("Estado Obrigatório"),
+        state: Yup.string()
+            .oneOf(optionsUF.map(opt => opt.id), "Seleção inválida")
+            .required("Estado Obrigatório"),
 
-    city: Yup.string().required("Cidade é obrigatório"),
+        city: Yup.string().required("Cidade é obrigatório"),
 
-    state_crm: Yup.string()
-        .oneOf(optionsUF_CRM, "Seleção inválida")
-        .required("CRM do Estado é Obrigatório"),
+        state_crm: Yup.string()
+            .oneOf(optionsUF_CRM.map(opt => opt.id), "Seleção inválida")
+            .required("CRM do Estado é Obrigatório"),
 
 
-    acceptTerms: Yup.bool().oneOf([true], 'Precisa assinar os termos')
+        acceptTerms: Yup.bool().oneOf([true], 'Precisa assinar os termos')
+    }),
+
 });
 
 
-const SectionRegister = () => {
+const SectionRegister = ({password}) => {
+
+
+    const [isSubmitting, SetisSubmitting] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [successMessage, setsuccessMessage] = useState(null);
+
+    const handleSubmit = async (values, actions) => {
+        const data = await new Promise((resolve) => {
+          window.setTimeout(() => resolve(values), 2000);
+        });
+        
+        if (isSubmitting) return;
+                SetisSubmitting(true);
+            try {
+                await api.post('participant', values)
+
+                // alert('Dados Cadastrado com Sucesso!');
+                setsuccessMessage('Dados Cadastrado com Sucesso!');               
+    
+                actions.resetForm();
+                history.push('/');
+
+            } catch (error) {
+
+                if (error.response.status === 401) { 
+                    setErrorMessage('Email ja cadastrado!');
+                                  
+                }
+                if (error.response.status === 404) { 
+                    alert('Error: Page Not Found');
+                }
+
+            } finally{
+                SetisSubmitting(false);
+            }
+        
+        actions.setSubmitting(false);
+       
+    };
+
+       
     return(
         <>
         {/* section begin */}
+        
         <section id="section-register" className="text-light">
             <div className="wm wm-border dark wow fadeInDown">inscrição</div>
                 <div className="container">
@@ -146,17 +178,21 @@ const SectionRegister = () => {
                         <div className="col-md-8 offset-md-2 wow fadeInUp">
                             <Formik name="contactForm" id="contact_form"
                                 initialValues={{
-                                    email: "",
-                                    state: "",
-                                    city: "",
-                                    state_crm:"",
-                                    crm: "",
-                                    specialty: "",
                                     name: "",
-                                    contact: "",
-                                    acceptTerms: false
+                                    email: "",                                                                 
+                                    fields:{
+                                        state: "",
+                                        city: "",
+                                        state_crm:"",
+                                        crm: "",
+                                        specialty: "",
+                                        contact: "",
+                                        acceptTerms: false
+                                    },
+                                    eventKey: "novalp",  
+                                    password: "Aa123456" 
                                 }}
-                                validationSchema={LoginSchema}
+                                validationSchema={RegisterSchema}
                                 onSubmit={handleSubmit}
                                 >
                                 {({ handleChange, touched, errors, isSubmitting }) => (
@@ -200,15 +236,15 @@ const SectionRegister = () => {
                                                 <div className="form-group">
                                                     <Field
                                                         type="text"
-                                                        name="specialty"
+                                                        name="fields[specialty]"
                                                         placeholder="Especialidade"
                                                         className={`form-control ${
-                                                            touched.specialty && errors.specialty ? "is-invalid" : ""
+                                                            touched?.fields?.specialty && errors?.fields?.specialty ? "is-invalid" : ""
                                                         }`}
                                                         />
                                                         <ErrorMessage
                                                         component="div"
-                                                        name="city"
+                                                        name="fields[specialty]"
                                                         className="invalid-feedback"
                                                     />
                                                 </div>
@@ -216,15 +252,15 @@ const SectionRegister = () => {
                                                 <div className="form-group">
                                                     <Field
                                                         type="text"
-                                                        name="contact"
+                                                        name="fields[contact]"
                                                         placeholder="Telefone com DDD *"
                                                         className={`form-control ${
-                                                            touched.contact && errors.contact ? "is-invalid" : ""
+                                                            touched?.fields?.contact && errors?.fields?.contact ? "is-invalid" : ""
                                                         }`}
                                                         />
                                                         <ErrorMessage
                                                         component="div"
-                                                        name="contact"
+                                                        name="fields[contact]"
                                                         className="invalid-feedback"
                                                     />
                                                 </div>
@@ -236,30 +272,30 @@ const SectionRegister = () => {
                                                 <div className="form-group">
                                                     <Field
                                                     type="text"
-                                                    name="city"
+                                                    name="fields[city]"
                                                     placeholder="Cidade *"
                                                     className={`form-control ${
-                                                        touched.city && errors.city ? "is-invalid" : ""
+                                                        touched?.fields?.city && errors?.fields?.city ? "is-invalid" : ""
                                                     }`}
                                                     />
                                                     <ErrorMessage
                                                     component="div"
-                                                    name="city"
+                                                    name="fields[city]"
                                                     className="invalid-feedback"
                                                     />
                                                 </div> 
 
                                                 <div className="form-group">
                                                     <Field
-                                                        name="state"
+                                                        name="fields[state]"
                                                         component="select"
                                                         placeholder="Estado *"
-                                                        onChange={handleChange}
                                                         className={` form-control ${
-                                                            touched.state && errors.state ? "is-invalid" : ""
+                                                            touched?.fields?.state && errors?.fields?.state ? "is-invalid" : ""
                                                         }`}
                                                         >
-                                                        {optionsUF.map((option) => (
+                                                             <option value="">Selecione seu Estado*</option>
+                                                        {optionsUF.map((option) => (                                                            
                                                                 <option value={option.id} key={option.id}>
                                                                     {option.title}
                                                                 </option>
@@ -268,7 +304,7 @@ const SectionRegister = () => {
 
                                                         <ErrorMessage
                                                         component="div"
-                                                        name="state"
+                                                        name="fields[state]"
                                                         className="invalid-feedback"
                                                     />
                                                 </div>
@@ -276,29 +312,29 @@ const SectionRegister = () => {
                                                 <div className="form-group">
                                                     <Field
                                                         type="text"
-                                                        name="crm"
+                                                        name="fields[crm]"
                                                         placeholder="CRM *"
                                                         className={`form-control ${
-                                                            touched.crm && errors.crm ? "is-invalid" : ""
+                                                            touched?.fields?.crm && errors?.fields?.crm ? "is-invalid" : ""
                                                         }`}
                                                         />
                                                         <ErrorMessage
                                                         component="div"
-                                                        name="crm"
+                                                        name="fields[crm]"
                                                         className="invalid-feedback"
                                                     />
                                                 </div>
 
                                                 <div className="form-group">
                                                     <Field
-                                                        name="state_crm"
+                                                        name="fields[state_crm]"
                                                         component="select"
                                                         placeholder="UF Estado *"
-                                                        onChange={handleChange}
                                                         className={` form-control ${
-                                                            touched.state_crm && errors.state_crm ? "is-invalid" : ""
+                                                            touched?.fields?.state_crm && errors?.fields?.state_crm ? "is-invalid" : ""
                                                         }`}
                                                         >
+                                                        <option value="">UF CRM *</option>
                                                         {optionsUF_CRM.map((option) => (
                                                                 <option value={option.id} key={option.id}>
                                                                 {option.title}
@@ -308,7 +344,7 @@ const SectionRegister = () => {
 
                                                         <ErrorMessage
                                                         component="div"
-                                                        name="state_crm"
+                                                        name="fields[state_crm]"
                                                         className="invalid-feedback"
                                                     />
                                                 </div>
@@ -319,17 +355,17 @@ const SectionRegister = () => {
                                         <div className="form-group form-check">
                                             <Field 
                                                 type="checkbox" 
-                                                name="acceptTerms" 
+                                                name="fields[acceptTerms]" 
                                                 id="acceptTerms" 
                                                 className={'form-check-input ' + (
-                                                    errors.acceptTerms && touched.acceptTerms ? ' is-invalid' : ''
+                                                    errors?.fields?.acceptTerms && touched?.fields?.acceptTerms ? ' is-invalid' : ''
                                                     )} 
                                                 />
 
                                                 <label htmlFor="acceptTerms" className="form-check-label">
                                                     Declaro que as informações acima prestadas são verdadeiras e assumo a inteira responsabilidade pelas mesmas, ciente das penalidades cabíveis da lei.
                                                 </label>
-                                            <ErrorMessage name="acceptTerms" component="div" className="invalid-feedback" />
+                                            <ErrorMessage name="fields[acceptTerms]" component="div" className="invalid-feedback" />
                                         </div>
 
                                          <div className="row wow fadeInUp">
@@ -341,16 +377,30 @@ const SectionRegister = () => {
                                         >
                                             {isSubmitting ? "Cadastrando.." : "Inscrever-se"}                                           
                                         </button>
-                                    </div>
-                                </div>                
-                                    
                                        
-                                        
-                                        
+                                    </div>
+                                    {errorMessage && (
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            {errorMessage} 
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {successMessage && (
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            {successMessage} 
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>                
                                                         
-                                    </Form>
-                                )}
-                                </Formik>
+                                </Form>
+                            )}
+                            </Formik>
  
                         </div>
                     </div>
