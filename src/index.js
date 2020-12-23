@@ -18,10 +18,6 @@ import './assets/css/color.css';
 
 import './assets/font-style.css';
 
-
-
-
-
 ReactDOM.render(
   <React.StrictMode>
     <Routes />
