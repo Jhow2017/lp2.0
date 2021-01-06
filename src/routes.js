@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+
 import Home from './pages/Home';
+import NotFound from './components/NotFound';
 
 const Routes = () => {
    return (
@@ -7,7 +9,7 @@ const Routes = () => {
         <Switch>            
             <Route path="/:eventKey" exact component={Home} />
             <Route>
-                <h1>Not found</h1>
+                <NotFound/>
             </Route>
         </Switch>
     </BrowserRouter>
