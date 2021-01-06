@@ -4,8 +4,11 @@ import Home from './pages/Home';
 const Routes = () => {
    return (
     <BrowserRouter>
-        <Switch>
-            <Route path="/" exact component={Home} />
+        <Switch>            
+            <Route path="/:eventKey" exact component={Home} />
+            <Route>
+                <h1>Not found</h1>
+            </Route>
         </Switch>
     </BrowserRouter>
    );

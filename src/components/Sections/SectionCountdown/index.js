@@ -33,7 +33,7 @@ const SectionCountdown = ({count}) => {
     useEffect(() => {
         if(expiryTimes)return;
         setNextDay(countdown + oneDay);
-        // console.log(nextDay);//new Date(nextDay)
+        console.log(nextDay);//new Date(nextDay)
         const tick = setInterval(setNewTime, 1000); 
         return () => clearInterval(tick) 
     }, [countdown, expiryTimes]);
@@ -86,14 +86,14 @@ const SectionCountdown = ({count}) => {
                             // {expiryTimes && (Date.now() < nextDay) && (
                             // {expiryTimes && ((Date.now() < nextDay) && (Date.now() < midnight)) && (
                               <span className="countdown-row countdown-show4 countdownNew">
-                                O EVENTO COMEÇOU <a href="">CLIQUE AQUI</a> PARA SE INSCREVER
+                                O EVENTO COMEÇOU <a id="section-register" href="/signin">CLIQUE AQUI</a> PARA SE INSCREVER
                               </span>
                             )}
 
                             {/* Após Meia noite */}
                             {expiryTimes && (Date.now() > midnight) && (
                               <span className="countdown-row countdown-show4 countdown00">
-                                <a href="#">ASSISTIR VIDEO ANTERIOR!</a>
+                                <a href="/signin">ASSISTIR VIDEO ANTERIOR!</a>
                               </span>
                             )}
 

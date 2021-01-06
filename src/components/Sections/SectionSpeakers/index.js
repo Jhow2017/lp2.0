@@ -1,5 +1,9 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import SpeakersInfo from '../../SpeakersInfo';
+
+import Aos from "aos";
+import "aos/dist/aos.css";
+
 
 
 const SectionSpeakers = () => {
@@ -39,19 +43,24 @@ const SectionSpeakers = () => {
                 description: 'Graduado em Medicina pela Universidade Gama Filho, especialista em Gastroenterologia pela Federação Brasileira de Gastroenterologia, mestrado em Gastroenterologia e doutorado em Medicina Interna com área de concentração em Gastroenterologia, ambos pela Universidade Federal do Rio de Janeiro. Possui pós-doutorado em Gastroenterologia pela Universidade Estadual do Rio de Janeiro. Atualmente, é Professor Adjunto do Serviço de Gastroenterologia e Responsável técnico pela Unidade de Esôfago do Serviço de Gastroenterologia do Hospital Universitário Pedro Ernesto - UERJ.',
                 facebook: 'https://www.facebook.com/',
                 instagram: 'https://www.instagram.com/'
-            }
+            }    
         ]
-    );  
+    );
+    
+    useEffect(()=> {
+        Aos.init({ duration: 2000 });
+    }, []);
 
     return(
         <>
        {/* section begin */}
-       <section id="section-speakers" className data-bgimage="url(images-event/bg/1.jpg) fixed top center" data-stellar-background-ratio=".2">
-            <div className="wm wm-border dark wow fadeInDown">palestras</div>
+
+       <section id="section-speakers" style={{background: 'url(https://firebasestorage.googleapis.com/v0/b/rstcom20.appspot.com/o/companies%2Fnovalp%2Flp%2Fbg%2F1.jpg?alt=media&token=cdf460da-22db-4b26-b946-6543be72a2f7) 50% 35.9438px / cover fixed'}}>
+            <div className="wm wm-border dark"  data-aos="fade-down">palestras</div>
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-6 offset-md-3 text-center wow fadeInUp text-light">
-                            <h1>Palestrantes</h1>
+                        <div className="col-md-6 offset-md-3 text-center text-light">
+                            <h1  data-aos="fade-up">Palestrantes</h1>
                             <div className="separator"><span><i className="fa fa-square" /></span></div>
                             <div className="spacer-single" />
                         </div>

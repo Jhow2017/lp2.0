@@ -1,23 +1,10 @@
-#jpreOverlay {
-	background-color: #000000;
-	position:absolute;
-	width:100%;
-	height:100%;
-}
+
 #jpreSlide{
 	font-size:22px;
 	color:#ccc;
 	text-align:center;
 	width:50%;
 	height:30%;
-}
-#jpreLoader{
-	width:400px;
-	height:2px;
-	background:#111;
-	border-radius:25px;
-	-moz-border-radius:25px;
-	-webkit-border-radius:25px;
 }
 
 #jpreBar {

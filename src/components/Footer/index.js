@@ -1,4 +1,4 @@
-
+import ScrollToTop from "../ScrollToTop";
 const Footer = () => {
 
   return (
@@ -27,7 +27,7 @@ const Footer = () => {
                 </div>
             </div>
         </div>
-        <a href="..." id="back-to-top" className="custom-1" />
+        <ScrollToTop/>
     </footer>
     {/* footer close */}
     </>

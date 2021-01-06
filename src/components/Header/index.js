@@ -1,55 +1,82 @@
+import React, { useEffect, useState } from "react";
+import {Link} from "react-scroll";
+
+import Hamburger from './Hamburger';
+
+import './header.css';
 
 const Header = ({logoUrl}) => {
+    
+
+const [isMobile, SetIsMobile] = useState(window.matchMedia('(max-width: 992px)').matches);
+
+useEffect( () => {
+    window.addEventListener('resize', () => { 
+        SetIsMobile(window.matchMedia('(max-width: 992px)').matches);
+    });
+});
+
+const [ menuOpen, setMenuOpen ] = useState(false);
+
 
   return (
-    <header className="transparent">
-        <div className="info">
-            <div className="container">
-                <div className="row">
-                <div className="col-md-12">
-                    <div className="column">Working Hours Monday - Friday <span className="id-color"><strong>08:00-16:00</strong></span></div>
-                    <div className="column">Toll Free <span className="id-color"><strong>1800.899.900</strong></span></div>
-                    {/* social icons */}
-                    <div className="column social">
-                    <a href="#"><i className="fa fa-facebook" /></a>
-                    <a href="#"><i className="fa fa-twitter" /></a>
-                    <a href="#"><i className="fa fa-rss" /></a>
-                    <a href="#"><i className="fa fa-google-plus" /></a>
-                    <a href="#"><i className="fa fa-envelope-o" /></a>
-                    </div>
-                    {/* social icons close */}
-                </div>
-                </div>
+    <header className="transparent header">
+    <div className="container">
+        <div className="row">
+            <div className="col-md-12 menulist">
+            {/* logo begin */}
+            <div id="logo" className="header__brand">
+                <a href="index.html">
+                    <img className="logo w-75" src={logoUrl} alt="" />
+                </a>
+            </div>
+            {/* logo close */}
+            {/* small button begin */}
+            <div className="header__nav-toggle" onClick={() => {
+                setMenuOpen(o => !o);
+            }}> <Hamburger/>
+        </div>
+            {/* small button close */}
+            {/* mainmenu begin */}
+            <nav id="nav" className={`header__nav ${menuOpen ? '' : 'hidden'}`}>
+                <ul id="mainmenu" className="ms-2">
+                    
+                    <li>
+                        <Link to={!isMobile ? 'section-hero' : 'section-hero-mobile'} smooth={true} duration={1000}>
+                            Início
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link to="section-about" smooth={true} duration={1000}>
+                            Sobre
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link to="section-speakers" smooth={true} duration={1000}>
+                            Palestrantes
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link to="section-schedule" smooth={true} duration={1000}>
+                            Agenda
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link to="section-register" smooth={true} duration={1000}>
+                            Inscrição
+                        </Link>
+                    </li>
+                </ul>
+            </nav>
+            {/* mainmenu close */}
             </div>
         </div>
-        <div className="container">
-            <div className="row">
-                <div className="col-md-12">
-                {/* logo begin */}
-                <div id="logo">
-                    <a href="index.html">
-                        <img className="logo w-75" src={logoUrl} alt="" />
-                    </a>
-                </div>
-                {/* logo close */}
-                {/* small button begin */}
-                <span id="menu-btn" />
-                {/* small button close */}
-                {/* mainmenu begin */}
-                <nav>
-                    <ul id="mainmenu" className="ms-2">
-                    <li><a href="#section-hero">Início<span /></a></li>
-                    <li><a href="#section-about">Sobre<span /></a></li>
-                    <li><a href="#section-speakers">Palestrantes<span /></a></li>
-                    <li><a href="#section-schedule">Agenda<span /></a></li>
-                    <li><a href="#section-register">Inscrição<span /></a></li>
-                    </ul>
-                </nav>
-                {/* mainmenu close */}
-                </div>
-            </div>
-        </div>
-    </header>
+    </div>
+</header>
   );
 }
 
