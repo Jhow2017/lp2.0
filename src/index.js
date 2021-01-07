@@ -17,10 +17,6 @@ import './assets/css/color.css';
 
 import './assets/font-style.css';
 
-
-
-
-
 ReactDOM.render(
   <React.StrictMode>
     <Routes />
@@ -28,12 +24,3 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-
-// setTimeout(() => {
-// 	ReactDOM.render(
-//     <React.StrictMode>
-//       <Routes />
-//     </React.StrictMode>,
-//     document.getElementById('root')
-//   );
-// }, 3000);

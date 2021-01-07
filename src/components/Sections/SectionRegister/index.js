@@ -87,10 +87,6 @@ const RegisterSchema = Yup.object().shape({
         .email("Formato de endereço de e-mail inválido")
         .required("E-mail é obrigatório"),
 
-    // specialty: Yup.string()
-    //     .email("Formato de endereço de e-mail inválido")
-    //     .required("E-mail é obrigatório"),
-
     // password: Yup.string()
     //      .required("Senha é obrigatório")
     //      .matches( /^(?=.*[A-Za-z])(?=.*\d)[\w\W]{8,100}$/,"Digite uma senha forte. Ex: Nbb_885522")
@@ -100,9 +96,13 @@ const RegisterSchema = Yup.object().shape({
     //      .matches(RegExp("(.*\\d.*)"), "Number"),
 
     fields: Yup.object().shape({
+
+         // specialty: Yup.string().required("Campo é obrigatório"),
+
         contact: Yup.string()
             .matches(phoneRegExp, "Número de telefone não é válido")
             .required("Número de contato obrigatório"),
+
         crm: Yup.string()
             .matches(crmExp, "Número do CRM inválido")
             .required("CRM obrigatório"),
@@ -116,7 +116,6 @@ const RegisterSchema = Yup.object().shape({
         state_crm: Yup.string()
             .oneOf(optionsUF_CRM.map(opt => opt.id), "Seleção inválida")
             .required("CRM do Estado é Obrigatório"),
-
 
         acceptTerms: Yup.bool().oneOf([true], 'Precisa assinar os termos')
     }),

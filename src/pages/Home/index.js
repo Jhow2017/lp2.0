@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
+import Seo from "../../components/Seo";
 import Header from '../../components/Header';
 import BannerParallax from '../../components/BannerParallax';
 import BannerMobile from '../../components/BannerMobile';
@@ -31,10 +33,17 @@ const Home = () => {
   const [countdown, setCountdown] = useState();
   const [infoPassword, SetInfoPassword] = useState();
 
+  const [seoInfo, SetSeoInfo] = useState({});
+
   useEffect(() => {
     api
       .get(`/event/public-info?key=${eventKey}`)
       .then((res) => {
+
+        // Pegando Seo
+        SetSeoInfo(res?.data);
+        // console.log(res?.data);
+
         // Pegando o banner/Logo
         setInfo(res?.data?.customization);
 
@@ -54,6 +63,7 @@ const Home = () => {
 
   return (
     <>
+    <Seo inforSeo={seoInfo}/>
     {loading === false ? (
       <div>
         <div id="wrapper">
