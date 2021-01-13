@@ -14,6 +14,9 @@ import SectionFunFacts from '../../components/Sections/SectionFunFacts';
 import SectionRegister from '../../components/Sections/SectionRegister';
 import Footer from '../../components/Footer';
 
+import{ init } from 'emailjs-com';
+init("user_Oq3mwW4sZhoNfy7lMrOEk");
+
 import LoadingScreen from '../../components/LoadingScreen';
 
 import FooterBottom from '../../components/Sections/FooterBottom';

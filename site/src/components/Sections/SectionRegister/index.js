@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage, withFormik } from "formik";
 import * as Yup from "yup";
 
+import emailjs from 'emailjs-com';
+
 import api from '../../../services/api';
 import { useHistory, useParams } from "react-router-dom";
 
@@ -125,6 +127,7 @@ const RegisterSchema = Yup.object().shape({
 
 
 const SectionRegister = ({ password }) => {
+
     const history = useHistory();
     let { eventKey } = useParams();
     const [isSubmitting, SetisSubmitting] = useState(false);
@@ -156,9 +159,25 @@ const SectionRegister = ({ password }) => {
         if (isSubmitting) return;
             SetisSubmitting(true)
         try {
-            console.log('handleSubmit', values);
+            console.log('handleSubmit', values)
             
             await api.post('participant', values)
+
+            //Envio do email
+            var templateParams = {  
+                to_name: values.name,
+                to_email: values.email,
+            };
+             
+            var service_id = 'gmail';
+            var template_id = 'rstcom-template';
+
+            emailjs.send(service_id, template_id, templateParams)
+                .then(function(response) {
+                   console.log('SUCCESS!', response.status, response.text);
+                }, function(error) {
+                   console.log('FAILED...', error);
+                });
 
             // alert('Dados Cadastrado com Sucesso!');
             setsuccessMessage('Dados Cadastrado com Sucesso!');
@@ -170,7 +189,7 @@ const SectionRegister = ({ password }) => {
 
             actions.resetForm();
             history.push(`/${eventKey}`);
-            window.open(`/${eventKey}/signin`, '_blank');
+            // window.open(`/${eventKey}/signin`, '_blank');
 
         } catch (error) {
             console.log('handleSubmit', {error,values});
