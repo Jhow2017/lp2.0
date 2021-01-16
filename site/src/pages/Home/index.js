@@ -55,6 +55,7 @@ const Home = () => {
           `${res?.data.eventdate}T${res.data?.eventhour}`
         ).getTime();
         setCountdown(cont);
+        console.log(cont);
 
         // Pegando a senha
         SetInfoPassword(res?.data?.password);
