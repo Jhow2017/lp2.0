@@ -7,6 +7,7 @@ import './header.css';
 
 const Header = ({logoUrl}) => {
     
+const [darkMode, setDarkMode] = useState(false);
 
 const [isMobile, SetIsMobile] = useState(window.matchMedia('(max-width: 992px)').matches);
 
@@ -70,7 +71,33 @@ const [ menuOpen, setMenuOpen ] = useState(false);
                             Inscrição
                         </Link>
                     </li>
+                    <li>
+                        <Link to="section-register" smooth={true} duration={1000}>
+                            Inscrição
+                        </Link>
+                    </li>
+                    <li>
+                        <div className="toggle-container">
+                            <span style={{ color: darkMode ? "grey" : "yellow" }}>☀︎</span>
+                            <span className="toggle">
+                                <input
+                                checked={darkMode}
+                                onChange={() => setDarkMode(prevMode => !prevMode)}
+                                id="checkbox"
+                                className="checkbox"
+                                type="checkbox"
+                                />
+                                <label htmlFor="checkbox" />
+                            </span>
+                            <span style={{ color: darkMode ? "slateblue" : "grey" }}>☾</span>
+                            {/* <button onClick={() => setDarkMode(prevMode => !prevMode)}>
+                            Toggle
+                            </button> */}
+                        </div>
+                    </li>
+                    
                 </ul>
+               
             </nav>
             {/* mainmenu close */}
             </div>

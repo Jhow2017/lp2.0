@@ -24,6 +24,40 @@ import FooterBottom from '../../components/Sections/FooterBottom';
 import api from '../../services/api';
 
 const Home = () => {
+
+  /*
+  const [darkMode, setDarkMode] = useState(getInitialMode());
+
+    useEffect(()=> {
+        localStorage.setItem('dark', JSON.stringify(darkMode));
+    }, [darkMode]);
+
+    function getInitialMode(){
+        const isReturningUser = "dark" in localStorage;
+        const savedMode = JSON.parse(localStorage.getItem('dark'));
+        const userPreferDark = getPrefColorScheme();
+
+        // Se o modo foi salvo -> Dark / Light
+        if(isReturningUser){
+            return savedMode;
+            // Se o esquema de cores preferido for Dark -> Dark
+        }
+        else if (userPreferDark){
+            return true;
+            // caso contrário -> Light
+        }
+        else {
+           return false; 
+        }
+    }
+
+    function getPrefColorScheme(){
+        if(!window.matchMedia) return ;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+
+    FIM DARKMODE*/
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -71,7 +105,7 @@ const Home = () => {
     {loading === false ? (
       <div>
         <div id="wrapper">
-          <Header logoUrl={info?.logo} />
+          <Header logoUrl={info?.logo}  />
 
           <div id="content" className="no-bottom no-top">
             <BannerParallax imageUrl={info?.banner} />

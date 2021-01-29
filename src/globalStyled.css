@@ -7290,3 +7290,97 @@ header.transparent.header-mobile.height-auto {
 body p {
     color: #606060;
 }
+
+/*TOGGLE DARK MODE OR LIGHT MODE*/
+
+/*SECTION ABOUT*/
+
+/*LIGHT MODE*/
+.light-mode {
+	background:#fff;
+	color:#18191b;
+	transition: background 0.25s ease-out;
+	
+}
+.light-mode h1 {
+	color: #222;
+}
+
+/*DARK MODE*/
+.dark-mode {
+	background:#18191b;
+	color:#fff;
+	transition: background 0.25s ease-out;
+	
+}
+.dark-mode h1 {
+	color: #eceff3;
+}
+
+.toggle {
+	position: relative;
+	padding: 0 4px;
+	display: flex;
+	align-items: center;
+}
+  
+input[type="checkbox"].checkbox {
+	width: 40px;
+	height: 10px;
+	background: #555;
+	position: relative;
+	border-radius: 5px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	cursor: pointer;
+	vertical-align: 2px;
+	outline: none;
+}
+  
+input[type="checkbox"].checkbox:checked + label {
+	left: 30px;
+}
+  
+input[type="checkbox"].checkbox:focus-visible {
+	outline: solid 2px white;
+}
+  
+input[type="checkbox"].checkbox + label {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	transition: all 0.3s ease;
+	cursor: pointer;
+	position: absolute;
+	left: 2px;
+	margin: 0;
+	background: #fff;
+	opacity: 0.9;
+	background-color: cyan;
+}
+  
+.toggle-container {
+	display: flex;
+    margin: 22px auto;
+    justify-content: center;
+    align-items: center;
+    /* position: relative; */
+    margin-left: 9px;
+}
+  
+.toggle-container > span {
+	font-size: 1.2em;
+	background: none;
+	border: none;
+	cursor: pointer;
+	transition: color 0.3s ease;
+	margin-top: 4px;
+	margin-right: 2px;
+}
+
+.toggle-container > span:last-child {
+	margin-top: 5px;
+}
+  
