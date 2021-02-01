@@ -168,7 +168,10 @@ const SectionRegister = ({ password, theme}) => {
             var templateParams = {  
                 to_name: values.name,
                 to_email: values.email,
+                fromname: "Confirmação de Inscrição",
             };
+
+
              
             var service_id = 'gmail';
             var template_id = 'rstcom-template';
