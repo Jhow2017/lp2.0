@@ -4,7 +4,7 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 
 
-const SectionSchedule = () => {
+const SectionSchedule = ({theme}) => {
 
     
 const data = [
@@ -126,7 +126,7 @@ const data = [
         <>
         {/* section begin */}
         
-        <section id="section-schedule" aria-label="section-services-tab" style={{background: 'url(https://firebasestorage.googleapis.com/v0/b/rstcom20.appspot.com/o/companies%2Fnovalp%2Flp%2Fbg%2F6.jpg?alt=media&token=f694f030-b615-434a-b499-46f12b52ec99) right top / cover no-repeat'}}>
+        <section id="section-schedule" className={theme ? "dark-mode" : "light-mode"} aria-label="section-services-tab">
             <div className="wm wm-border light" data-aos="fade-down">agenda</div>
             <div className="container">
                 <div className="row">

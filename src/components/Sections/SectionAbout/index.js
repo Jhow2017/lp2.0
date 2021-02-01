@@ -3,37 +3,7 @@ import "aos/dist/aos.css";
 import { useEffect, useState } from "react";
 
 
-const SectionAbout = () => {
-
-    const [darkMode, setDarkMode] = useState(getInitialMode());
-
-    useEffect(()=> {
-        localStorage.setItem('dark', JSON.stringify(darkMode));
-    }, [darkMode]);
-
-    function getInitialMode(){
-        const isReturningUser = "dark" in localStorage;
-        const savedMode = JSON.parse(localStorage.getItem('dark'));
-        const userPreferDark = getPrefColorScheme();
-
-        // Se o modo foi salvo -> Dark / Light
-        if(isReturningUser){
-            return savedMode;
-            // Se o esquema de cores preferido for Dark -> Dark
-        }
-        else if (userPreferDark){
-            return true;
-            // caso contrário -> Light
-        }
-        else {
-           return false; 
-        }
-    }
-
-    function getPrefColorScheme(){
-        if(!window.matchMedia) return ;
-        return window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
+const SectionAbout = ({theme}) => {
 
     useEffect(()=> {
         Aos.init({ duration: 2000 });
@@ -41,27 +11,10 @@ const SectionAbout = () => {
 
     return(
         <>
-        <section id="section-about" className={darkMode ? "dark-mode" : "light-mode"}>
+        <section id="section-about" className={theme ? "dark-mode" : "light-mode"}>
         {/* <div class="wm wm-border light  fadeInDown text-align">BemVindo</div> */}
             <div className="container">
-                <div className="toggle-container">
-                    <span style={{ color: darkMode ? "grey" : "yellow" }}>☀︎</span>
-                    <span className="toggle">
-                        <input
-                        checked={darkMode}
-                        onChange={() => setDarkMode(prevMode => !prevMode)}
-                        id="checkbox"
-                        className="checkbox"
-                        type="checkbox"
-                        />
-                        <label htmlFor="checkbox" />
-                    </span>
-                    <span style={{ color: darkMode ? "slateblue" : "grey" }}>☾</span>
-                    {/* <button onClick={() => setDarkMode(prevMode => !prevMode)}>
-                    Toggle
-                    </button> */}
-                </div>
-                    <div className="row align-items-center">
+                <div className="row align-items-center">
                     <div className="col-lg-6" data-aos="fade-right">
                         <h1 className="text-left">A SUA CONEXÃO<br />COM O CONHECIMENTO</h1>
                         <p>

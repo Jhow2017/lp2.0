@@ -1,10 +1,16 @@
-import React from "react";
-
-import { Formik, Form } from "formik";
-import CustomField from '../SectionRegister/CustomField';
+import React, { useState, useEffect } from "react";
+import {Link} from "react-scroll";
+import { Formik, Form, Field, ErrorMessage, withFormik } from "formik";
 import * as Yup from "yup";
 
+import emailjs from 'emailjs-com';
 
+import api from '../../../services/api';
+import { useHistory, useParams } from "react-router-dom";
+
+
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 const crmExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -72,7 +78,7 @@ const optionsUF_CRM = [
     { id: 'TO', title: 'Tocantins' },
 ];
 
-const schema = Yup.object().shape({
+const RegisterSchema = Yup.object().shape({
 
     name: Yup.string()
         .min(5, "O nome deve ter no mínimo 3 caracteres")
@@ -83,6 +89,14 @@ const schema = Yup.object().shape({
         .lowercase('Email deve ser em letras minusculas')
         .email("Formato de endereço de e-mail inválido")
         .required("E-mail é obrigatório"),
+
+    // password: Yup.string()
+    //      .required("Senha é obrigatório")
+    //      .matches( /^(?=.*[A-Za-z])(?=.*\d)[\w\W]{8,100}$/,"Digite uma senha forte. Ex: Nbb_885522")
+    //      .min(8)
+    //      .matches(RegExp("(.*[a-z].*)"), "Lowercase")
+    //      .matches(RegExp("(.*[A-Z].*)"), "Uppercase")
+    //      .matches(RegExp("(.*\\d.*)"), "Number"),
 
     fields: Yup.object().shape({
 
@@ -111,12 +125,106 @@ const schema = Yup.object().shape({
 
 });
 
-export default function SectionRegister(){
+
+
+const SectionRegister = ({ password, theme}) => {
+
+    const history = useHistory();
+    let { eventKey } = useParams();
+    const [isSubmitting, SetisSubmitting] = useState(false);
+
+    const [ initialValues, SetInitialValues ] = useState({
+        name: "",
+        email: "",
+        fields: {
+            state: "",
+            city: "",
+            state_crm: "",
+            crm: "",
+            specialty: "",
+            contact: "",
+            acceptTerms: false
+        },
+        eventKey: "",
+        password: ""
+    });
+
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [successMessage, setsuccessMessage] = useState(null);
+
+    const handleSubmit = async (values, actions) => {
+  
+        setsuccessMessage('');
+        setErrorMessage('');
+
+        if (isSubmitting) return;
+            SetisSubmitting(true)
+        try {
+            console.log('handleSubmit', values)
+            
+            await api.post('participant', values)
+
+            //Envio do email
+            var templateParams = {  
+                to_name: values.name,
+                to_email: values.email,
+            };
+             
+            var service_id = 'gmail';
+            var template_id = 'rstcom-template';
+
+            emailjs.send(service_id, template_id, templateParams)
+                .then(function(response) {
+                   console.log('SUCCESS!', response.status, response.text);
+                }, function(error) {
+                   console.log('FAILED...', error);
+                });
+
+            // alert('Dados Cadastrado com Sucesso!');
+            setsuccessMessage('Dados Cadastrado com Sucesso!');
+
+            setTimeout(function () {
+                setsuccessMessage('');
+            }, 3000);
+            
+
+            actions.resetForm();
+            history.push(`/${eventKey}`);
+            // window.open(`/${eventKey}/signin`, '_blank');
+
+        } catch (error) {
+            console.log('handleSubmit', {error,values});
+            
+            setErrorMessage(error?.response?.data?.message || "Nao foi possivel realizar o cadastro, tente novamente.");
+            setTimeout(function () {
+                setErrorMessage('');
+            }, 3000);
+
+        } finally {
+            SetisSubmitting(false);
+        }
+
+        actions.setSubmitting(false);
+
+    };
+
+    useEffect(()=>{
+
+        SetInitialValues(prev => ({...prev, password, eventKey}));
+
+
+    },[password, eventKey]);
+
+    useEffect(()=> {
+        Aos.init({ duration: 2000 });
+    }, []);
+
+
     return (
         <>
             {/* section begin */}
 
-            <section id="section-register" className="text-light">
+            <section id="section-register" className={theme ? "dark-mode" : "light-mode"}>
                 <div className="wm wm-border dark" data-aos="fade-down">inscrição</div>
                 <div className="container">
                     <div className="row">
@@ -127,40 +235,232 @@ export default function SectionRegister(){
                         </div>
                         <div className="col-md-8 offset-md-2"  data-aos="fade-up">
                             <Formik
-                                validationSchema={schema}
-                                initialValues={{
-                                    firstname: '',
-                                    age: ''
-                                }}
+                                name="contactForm" id="contact_form"
+                                initialValues={initialValues}
+                                enableReinitialize
+                                validationSchema={RegisterSchema}
+                                onSubmit={handleSubmit}
                             >
                                 {({ handleChange, handleBlur, values, touched, errors, isSubmitting }) => (
                                     <Form>
-                                        <div className="col-md-6 mb-0">
-                                            <div className="form-group">
-                                                <CustomField 
-                                                    name="firstname" 
-                                                    type="text" 
-                                                    placeholder="Primeiro Nome"
-                                                    className={`form-control ${touched.firstname && errors.firstname ? "is-invalid" : ""
-                                                                }`}
-                                                />
+                                        <div className="row">
+                                            <div className="col-md-6 mb-0">
+
+                                            <div className="">
+                                                    <input
+                                                        type="hidden"
+                                                        name="eventKey"
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.eventKey}
+                                                    />
+                                                     <input
+                                                        type="hidden"
+                                                        name="password"
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.password}
+                                                    />
+
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <Field
+                                                        type="text"
+                                                        name="name"
+                                                        placeholder="Nome Completo*"
+                                                        className={`form-control ${touched.name && errors.name ? "is-invalid" : ""
+                                                            }`}
+                                                    />
+
+                                                    <ErrorMessage
+                                                        component="div"
+                                                        name="name"
+                                                        className="invalid-feedback"
+                                                    />
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <Field
+                                                        type="text"
+                                                        name="email"
+                                                        placeholder="Email*"
+                                                        className={`form-control ${touched.email && errors.email ? "is-invalid" : ""
+                                                            }`}
+                                                    />
+                                                    <ErrorMessage
+                                                        component="div"
+                                                        name="email"
+                                                        className="invalid-feedback"
+                                                    />
+                                                </div>
+                                                
+                                                <div className="form-group">
+                                                    <Field
+                                                        type="text"
+                                                        name="fields[specialty]"
+                                                        placeholder="Especialidade"
+                                                        className={`form-control ${touched?.fields?.specialty && errors?.fields?.specialty ? "is-invalid" : ""
+                                                            }`}
+                                                    />
+                                                    <ErrorMessage
+                                                        component="div"
+                                                        name="fields[specialty]"
+                                                        className="invalid-feedback"
+                                                    />
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <Field
+                                                        type="text"
+                                                        name="fields[contact]"
+                                                        placeholder="Telefone com DDD *"
+                                                        className={`form-control ${touched?.fields?.contact && errors?.fields?.contact ? "is-invalid" : ""
+                                                            }`}
+                                                    />
+                                                    <ErrorMessage
+                                                        component="div"
+                                                        name="fields[contact]"
+                                                        className="invalid-feedback"
+                                                    />
+                                                </div>
+
+                                            </div>
+
+                                            <div className="col-md-6">
+
+                                                <div className="form-group">
+                                                    <Field
+                                                        type="text"
+                                                        name="fields[city]"
+                                                        placeholder="Cidade *"
+                                                        className={`form-control ${touched?.fields?.city && errors?.fields?.city ? "is-invalid" : ""
+                                                            }`}
+                                                    />
+                                                    <ErrorMessage
+                                                        component="div"
+                                                        name="fields[city]"
+                                                        className="invalid-feedback"
+                                                    />
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <Field
+                                                        name="fields[state]"
+                                                        component="select"
+                                                        placeholder="Estado *"
+                                                        className={` form-control ${touched?.fields?.state && errors?.fields?.state ? "is-invalid" : ""
+                                                            }`}
+                                                    >
+                                                        <option value="">Selecione seu Estado*</option>
+                                                        {optionsUF.map((option) => (
+                                                            <option value={option.id} key={option.id}>
+                                                                {option.title}
+                                                            </option>
+                                                        ))}
+                                                    </Field>
+
+                                                    <ErrorMessage
+                                                        component="div"
+                                                        name="fields[state]"
+                                                        className="invalid-feedback"
+                                                    />
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <Field
+                                                        type="text"
+                                                        name="fields[crm]"
+                                                        placeholder="CRM *"
+                                                        className={`form-control ${touched?.fields?.crm && errors?.fields?.crm ? "is-invalid" : ""
+                                                            }`}
+                                                    />
+                                                    <ErrorMessage
+                                                        component="div"
+                                                        name="fields[crm]"
+                                                        className="invalid-feedback"
+                                                    />
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <Field
+                                                        name="fields[state_crm]"
+                                                        component="select"
+                                                        placeholder="UF Estado *"
+                                                        className={` form-control ${touched?.fields?.state_crm && errors?.fields?.state_crm ? "is-invalid" : ""
+                                                            }`}
+                                                    >
+                                                        <option value="">UF CRM *</option>
+                                                        {optionsUF_CRM.map((option) => (
+                                                            <option value={option.id} key={option.id}>
+                                                                {option.title}
+                                                            </option>
+                                                        ))}
+                                                    </Field>
+
+                                                    <ErrorMessage
+                                                        component="div"
+                                                        name="fields[state_crm]"
+                                                        className="invalid-feedback"
+                                                    />
+                                                </div>
+
                                             </div>
                                         </div>
 
-                                        <div className="col-md-6">              
-                                            <div className="form-group">
-                                                <CustomField 
-                                                    name="age" 
-                                                    type="number" 
-                                                    placeholder="Idade"
-                                                    className={`form-control ${touched.age && errors.age ? "is-invalid" : ""
-                                                }`}
-                                                />
-                                            </div>
+                                        <div className="form-group form-check">
+                                            <Field
+                                                type="checkbox"
+                                                name="fields[acceptTerms]"
+                                                id="acceptTerms"
+                                                className={'form-check-input ' + (
+                                                    errors?.fields?.acceptTerms && touched?.fields?.acceptTerms ? ' is-invalid' : ''
+                                                )}
+                                            />
+
+                                            <label htmlFor="acceptTerms" className="form-check-label">
+                                                Declaro que as informações acima prestadas são verdadeiras e assumo a inteira responsabilidade pelas mesmas, ciente das penalidades cabíveis da lei.
+                                                </label>
+                                            <ErrorMessage name="fields[acceptTerms]" component="div" className="invalid-feedback" />
                                         </div>
+
+                                        <div className="row">
+                                            <div className="col-md-12 text-center">
+                                                <button  data-aos="fade-up"
+                                                    type="submit"
+                                                    className="btn btn-line"
+                                                    disabled={isSubmitting}
+                                                >
+                                                    {isSubmitting ? "Cadastrando.." : "Inscrever-se"}
+                                                </button>
+
+                                            </div>
+                                            <a href={`/${eventKey}/signin`} target="_blank" className="inscrito">
+                                                Já sou inscrito
+                                            </a>
+                                            {errorMessage && (
+                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                    {errorMessage}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            )}
+
+                                            {successMessage && (
+                                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    {successMessage}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+
                                     </Form>
                                 )}
                             </Formik>
+
                         </div>
                     </div>
                 </div>
@@ -169,3 +469,5 @@ export default function SectionRegister(){
         </>
     );
 }
+
+export default SectionRegister;

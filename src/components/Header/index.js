@@ -5,9 +5,7 @@ import Hamburger from './Hamburger';
 
 import './header.css';
 
-const Header = ({logoUrl}) => {
-    
-const [darkMode, setDarkMode] = useState(false);
+const Header = ({logoUrl, theme, themeToggler}) => {
 
 const [isMobile, SetIsMobile] = useState(window.matchMedia('(max-width: 992px)').matches);
 
@@ -78,21 +76,18 @@ const [ menuOpen, setMenuOpen ] = useState(false);
                     </li>
                     <li>
                         <div className="toggle-container">
-                            <span style={{ color: darkMode ? "grey" : "yellow" }}>☀︎</span>
+                            <span style={{ color: theme ? "grey" : "yellow" }}>☀︎</span>
                             <span className="toggle">
                                 <input
-                                checked={darkMode}
-                                onChange={() => setDarkMode(prevMode => !prevMode)}
-                                id="checkbox"
-                                className="checkbox"
-                                type="checkbox"
+                                    checked={theme}
+                                    onChange={() => themeToggler()}
+                                    id="checkbox"
+                                    className="checkbox"
+                                    type="checkbox"
                                 />
                                 <label htmlFor="checkbox" />
                             </span>
-                            <span style={{ color: darkMode ? "slateblue" : "grey" }}>☾</span>
-                            {/* <button onClick={() => setDarkMode(prevMode => !prevMode)}>
-                            Toggle
-                            </button> */}
+                            <span style={{ color: theme ? "slateblue" : "grey" }}>☾</span>
                         </div>
                     </li>
                     

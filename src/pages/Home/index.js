@@ -25,8 +25,12 @@ import api from '../../services/api';
 
 const Home = () => {
 
-  /*
+  /*Dark*/
   const [darkMode, setDarkMode] = useState(getInitialMode());
+
+  const themeToggler = () =>{
+      setDarkMode(prevMode => !prevMode);
+  }
 
     useEffect(()=> {
         localStorage.setItem('dark', JSON.stringify(darkMode));
@@ -56,7 +60,7 @@ const Home = () => {
         return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
 
-    FIM DARKMODE*/
+    /*FIM DARKMODE*/
 
   const [loading, setLoading] = useState(true);
 
@@ -105,7 +109,7 @@ const Home = () => {
     {loading === false ? (
       <div>
         <div id="wrapper">
-          <Header logoUrl={info?.logo}  />
+          <Header logoUrl={info?.logo} theme={darkMode} themeToggler={themeToggler} />
 
           <div id="content" className="no-bottom no-top">
             <BannerParallax imageUrl={info?.banner} />
@@ -114,17 +118,17 @@ const Home = () => {
 
             <SectionCountdown count={countdown} />
 
-            <SectionAbout />
+            <SectionAbout theme={darkMode}/>
 
-            <SectionFeatures />
+            <SectionFeatures theme={darkMode}/>
 
             <SectionSpeakers />
 
-            <SectionSchedule />
+            <SectionSchedule theme={darkMode}/>
 
             <SectionFunFacts />
 
-            <SectionRegister password={infoPassword} />
+            <SectionRegister password={infoPassword} theme={darkMode}/>
 
             <Footer />
           </div>

@@ -7290,7 +7290,13 @@ header.transparent.header-mobile.height-auto {
 body p {
     color: #606060;
 }
-
+a.inscrito {
+    color: #606060;
+    text-align: center;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+}
 /*TOGGLE DARK MODE OR LIGHT MODE*/
 
 /*SECTION ABOUT*/
@@ -7305,7 +7311,23 @@ body p {
 .light-mode h1 {
 	color: #222;
 }
+.light-mode .wm.dark.wm-border {
+	-webkit-text-stroke-color: rgba(0,0,0,.1);
+}
 
+.light-mode input.form-control, 
+.light-mode select.form-control{
+	background: rgb(255 255 255 / 20%);
+}
+
+.light-mode button.btn.btn-line.aos-init.aos-animate {
+    border: solid 1px #222;
+    color: #18191b;
+}
+.light-mode button.btn.btn-line.aos-init.aos-animate:hover {
+   background:#18191b;
+   color:#fff;
+}
 /*DARK MODE*/
 .dark-mode {
 	background:#18191b;
@@ -7316,6 +7338,19 @@ body p {
 .dark-mode h1 {
 	color: #eceff3;
 }
+
+.dark-mode .sc-info h3,
+.dark-mode  .schedule-item .sc-name h4{
+	color: #fff;
+}
+.dark-mode .wm.light.wm-border {
+    -webkit-text-stroke-color: rgb(255 255 255 / 10%);
+}
+
+.dark-mode button.btn.btn-line.aos-init.aos-animate {
+    color: #fff;
+}
+/*FIM DARK MODE*/
 
 .toggle {
 	position: relative;

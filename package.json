@@ -9,6 +9,7 @@
     "@types/node-sass": "^4.11.1",
     "aos": "^2.3.4",
     "axios": "^0.21.0",
+    "emailjs-com": "^2.6.4",
     "formik": "^2.2.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

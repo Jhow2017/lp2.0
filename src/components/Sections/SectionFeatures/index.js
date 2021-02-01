@@ -8,7 +8,7 @@ import "aos/dist/aos.css";
 
 
 
-const SectionFeatures = () => {
+const SectionFeatures = ({theme}) => {
     
     const [themes] = useState(
         [
@@ -26,7 +26,7 @@ const SectionFeatures = () => {
     return(
         <>
         {/* section begin */}
-        <section id="section-features" className="de_light section">
+        <section id="section-features" className={theme ? "dark-mode" : "light-mode"}> 
             <div className="wm wm-border light" data-aos="fade-down">temas</div>
             <div className="container">
                 <div className="row">
