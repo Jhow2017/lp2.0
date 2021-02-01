@@ -168,7 +168,7 @@ const SectionRegister = ({ password, theme}) => {
             var templateParams = {  
                 to_name: values.name,
                 to_email: values.email,
-                fromname: "Confirmação de Inscrição",
+                fromname: "Confirmação de Inscrição", // Pode por pelo painel do emailjs no campo From Name, e remover essa linha aqui
             };
 
 
